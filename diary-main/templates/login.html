@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Дневник программиста</title>
+    <title>Programmierertagebuch</title>
     <link rel="stylesheet" href="../static/css/style.css">
 </head>
 <body>
@@ -20,21 +19,21 @@
         <form action="{{ url_for('login') }}" method="POST" class="login">
             <p class="error">{{error}}</p>
 
-            <!-- Задание №2. Создать поля для логина -->
             <label for="email">
-                <input class="form__input" type="email" name="email" id="email" placeholder="Введите e-mail" required>
+                <input class="form__input" type="email" name="email" id="email" placeholder="Bitte geben Sie die E-Mail-Adresse ein" required>
            </label>
            <label for="password">
-                <input class="form__input" type="password" name="password" placeholder="Введите пароль">
+                <input class="form__input" type="password" name="password" placeholder="Bitte geben Sie das Passwort ein">
            </label>
 
             
 
-            <!--  -->
-                <button class="form__button">Войти</button>
-                <a href="/reg" class="form__button reg__link">Зарегистрироваться</a>
+            
+                <button class="form__button">Einloggen</button>
+                <a href="/reg" class="form__button reg__link">Registrieren</a>
         </form>
         {% endblock %}
       </main>
 </body>
 </html>
+
