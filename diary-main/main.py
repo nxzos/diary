@@ -1,35 +1,34 @@
-
-#Импорт
-from flask import Flask, render_template,request, redirect
-#Подключение библиотеки баз данных
+#Import
+from flask import Flask, render_template, request, redirect
+#Datenbank-Bibliothek einbinden
 from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
-#Подключение SQLite
+#SQLite einbinden
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///diary.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#Создание db
+#Datenbank erstellen
 db = SQLAlchemy(app)
-#Создание таблицы
+#Tabelle erstellen
 
 class Card(db.Model):
-    #Создание полей
+    #Felder erstellen
     #id
     id = db.Column(db.Integer, primary_key=True)
-    #Заголовок
+    #Titel
     title = db.Column(db.String(100), nullable=False)
-    #Описание
+    #Beschreibung
     subtitle = db.Column(db.String(300), nullable=False)
-    #Текст
+    #Text
     text = db.Column(db.Text, nullable=False)
 
-    #Вывод объекта и id
+    #Objekt und ID ausgeben
     def __repr__(self):
         return f'<Card {self.id}>'
     
 
-#Задание №1. Создать таблицу User
+#Aufgabe Nr.1: Tabelle "User" erstellen
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     login = db.Column(db.String(50), nullable=False)
@@ -37,13 +36,7 @@ class User(db.Model):
 
 
 
-
-
-
-
-
-
-#Запуск страницы с контентом
+#Seite mit Inhalt starten
 @app.route('/', methods=['GET','POST'])
 def login():
         error = ''
@@ -51,18 +44,17 @@ def login():
             form_login = request.form['email']
             form_password = request.form['password']
             
-            #Задание №4. Реализовать проверку пользователей
+            #Aufgabe Nr.4: Benutzerauthentifizierung implementieren
             users_db = User.query.all()
             for user in users_db:
                 if form_login == user.login and form_password == user.password:
                     return redirect('/index')
             else:
-                error = 'Неправильно указан пользователь или пароль'
+                error = 'Falscher Benutzername oder Passwort'
                 return render_template('login.html', error=error)
         
         else:
             return render_template('login.html')
-
 
 
 @app.route('/reg', methods=['GET','POST'])
@@ -71,7 +63,7 @@ def reg():
         login= request.form['email']
         password = request.form['password']
         
-        #Задание №3. Реализовать запись пользователей
+        #Aufgabe Nr.3: Benutzerregistrierung implementieren
         user = User(login=login, password=password)
         db.session.add(user)
         db.session.commit()
@@ -83,26 +75,26 @@ def reg():
         return render_template('registration.html')
 
 
-#Запуск страницы с контентом
+#Seite mit Inhalt starten
 @app.route('/index')
 def index():
-    #Отображение объектов из БД
+    #Objekte aus der Datenbank anzeigen
     cards = Card.query.order_by(Card.id).all()
     return render_template('index.html', cards=cards)
 
-#Запуск страницы c картой
+#Seite mit Karte starten
 @app.route('/card/<int:id>')
 def card(id):
     card = Card.query.get(id)
-    print(f"DEBUG: card.text = {card.text}")  # Проверяем, есть ли текст
+    print(f"DEBUG: card.text = {card.text}")  # Prüfen, ob Text vorhanden ist
     return render_template('card.html', card=card)
 
-#Запуск страницы c созданием карты
+#Seite zum Erstellen einer Karte starten
 @app.route('/create')
 def create():
     return render_template('create_card.html')
 
-#Форма карты
+#Kartenformular
 @app.route('/form_create', methods=['GET','POST'])
 def form_create():
     if request.method == 'POST':
@@ -110,8 +102,7 @@ def form_create():
         subtitle =  request.form['subtitle']
         text =  request.form['text']
 
-        #Создание объкта для передачи в дб
-
+        #Objekt zur Speicherung in der Datenbank erstellen
         card = Card(title=title, subtitle=subtitle, text=text)
 
         db.session.add(card)
@@ -119,7 +110,6 @@ def form_create():
         return redirect('/index')
     else:
         return render_template('create_card.html')
-
 
 
 
